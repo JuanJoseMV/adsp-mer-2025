@@ -3,9 +3,9 @@ requires = ["setuptools", "setuptools-scm"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "project-name"
-authors = [{ name = "author name", email = "author@email.com" }]
-description = "Project description"
+name = "adsp-mer"
+authors = [{name = "Juan Jose Marquez Villacis", email = "juan.marquez@linksfoundation.com"}]
+description = "The goal of the project is to integrate speech and text modalities to enhance emotion recognition performance beyond using text or speech alone."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
@@ -43,7 +43,7 @@ test = [
 package-dir = { "" = "src" }
 
 [tool.setuptools.dynamic]
-version = { attr = "package_name.__version__" }
+version = {attr = "adsp_mer.__version__"}
 dependencies = {file = "requirements.txt"}
 
 [tool.ruff]
