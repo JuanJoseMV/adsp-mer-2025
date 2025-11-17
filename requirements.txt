@@ -1,6 +1,0 @@
-# insert your 'production' requirements here
-numpy==2.3.3
-torch==2.8.0
-transformers==4.57.0
-datasets==4.2.0
-pandas==2.3.3

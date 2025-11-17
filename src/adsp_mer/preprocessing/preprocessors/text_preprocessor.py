@@ -1,13 +1,12 @@
-import logging
-
 from .base_preprocessor import BasePreprocessor
 from ..config import PreprocessorConfig
 from transformers import AutoTokenizer
 from datasets import (
     load_dataset, 
     DatasetDict,
-    Dataset,
+    Dataset
 )
+
 
 class TextPreprocessor(BasePreprocessor):
     def __init__(self, preprocessor_config: PreprocessorConfig):
@@ -47,7 +46,6 @@ class TextPreprocessor(BasePreprocessor):
             results["labels"] = labels
             return results
 
-        # Load datasets
         train_dataset = load_dataset(
             "csv", 
             data_files=f"{self.datasets_path}{self.text_dataset_path}/train.csv",
@@ -66,14 +64,12 @@ class TextPreprocessor(BasePreprocessor):
             split="train"
         )
         
-        # Join datasets
         dataset = DatasetDict({
             "train": train_dataset,
             "val": val_dataset,
             "test": test_dataset
         })
         
-        # Preprocess datasets
         dataset = dataset.map(
             _preprocess_function, 
             batched=True, 
@@ -81,7 +77,6 @@ class TextPreprocessor(BasePreprocessor):
             remove_columns=["text", "label"]
         )
         
-        # Set format
         dataset.set_format(
             type="torch",
             columns=[

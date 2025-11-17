@@ -7,8 +7,7 @@ from transformers import AutoFeatureExtractor
 from pathlib import Path
 from datasets import (
     Dataset,
-    load_dataset,
-    load_from_disk,
+    load_dataset
 )
 
 class AudioPreprocessor(BasePreprocessor):
@@ -33,18 +32,21 @@ class AudioPreprocessor(BasePreprocessor):
     def preprocess(self) -> Dataset:
         """
         Preprocess the dataset.
+        This code is taken and adapted from the following colab:
+        https://colab.research.google.com/drive/1P2qHb7mwYZSPxbQZ07S7NDH-2vWv38YS?usp=sharing
 
         returns:
             - dataset: Dataset, preprocessed dataset.
 
         """
-        # Taken from: https://colab.research.google.com/drive/1P2qHb7mwYZSPxbQZ07S7NDH-2vWv38YS?usp=sharing#scrollTo=v_BzbTu_hapW
         def speech_file_to_array_fn(path):
+            """
+            Load an audio file and convert it to a mono waveform.
+
+            """
             speech_array, sampling_rate = torchaudio.load(path)
             
-            # If there is more than 1 channel in your audio (stereo e. g. emovo)
             if speech_array.shape[0] > 1:
-                # Do a mean of all channels and keep it in one channel
                 speech_array = torch.mean(speech_array, dim=0, keepdim=True)
 
             resampler = torchaudio.transforms.Resample(sampling_rate, self.target_sampling_rate)
@@ -71,11 +73,6 @@ class AudioPreprocessor(BasePreprocessor):
             result.pop('input_values', None)
 
             return result
-
-        # audio_dataset_preprocessed_dir = Path('data/audio_dataset_preprocessed')
-        # if audio_dataset_preprocessed_dir.exists():
-        #     dataset = load_from_disk("data/audio_dataset_preprocessed")
-        #     return dataset
         
         dataset = load_dataset(
             path=f"{self.datasets_path}{self.audio_dataset_path}",
@@ -97,8 +94,5 @@ class AudioPreprocessor(BasePreprocessor):
                 "labels"
             ]
         )
-
-        # save dataset
-        # dataset.save_to_disk("data/audio_dataset_preprocessed")
 
         return dataset
